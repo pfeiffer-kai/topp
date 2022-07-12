@@ -1,16 +1,16 @@
-# -*- coding: utf-8 -*-
-# Copyright (C) 2014 Rosen Diankov <rosen.diankov@gmail.com> & Cuong Pham
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+# # -*- coding: utf-8 -*-
+# # Copyright (C) 2014 Rosen Diankov <rosen.diankov@gmail.com> & Cuong Pham
+# #
+# # Licensed under the Apache License, Version 2.0 (the "License");
+# # you may not use this file except in compliance with the License.
+# # You may obtain a copy of the License at
+# #     http://www.apache.org/licenses/LICENSE-2.0
+# #
+# # Unless required by applicable law or agreed to in writing, software
+# # distributed under the License is distributed on an "AS IS" BASIS,
+# # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# # See the License for the specific language governing permissions and
+# # limitations under the License.
 # cmake_minimum_required (VERSION 2.8.0)
 # project(topp)
 # set( CMAKE_ALLOW_LOOSE_LOOP_CONSTRUCTS TRUE )
@@ -85,112 +85,112 @@
 # else()
 #   set(EXTRA_COMPILE_FLAGS "")
 # endif()
-
-if( CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX )
-  add_definitions("-fno-strict-aliasing -Wall")
-endif( CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX )
-
-#configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/include/topp/config.h IMMEDIATE @ONLY)
-
-# find_package(OpenRAVE)
-# if( OpenRAVE_FOUND )
-#   set(EXTRA_COMPILE_FLAGS "${EXTRA_COMPILE_FLAGS} -DWITH_OPENRAVE")
-# endif()
-
-include(FindPythonInterp)
-## check python
-find_package(PythonLibs) # using PYTHON_INCLUDE_PATH instead of PYTHON_INCLUDE_DIRS?
-if( NOT PYTHON_EXECUTABLE )
-  # look specifically for 2.6
-  find_program(PYTHON_EXECUTABLE NAMES python2.6 python PATHS [HKEY_LOCAL_MACHINE\\SOFTWARE\\Python\\PythonCore\\2.6\\InstallPath])
-endif()
-
-# back compat?
-if( NOT PYTHON_INCLUDE_DIRS )
-  set(PYTHON_INCLUDE_DIRS ${PYTHON_INCLUDE_PATH})
-endif()
-
-if( PYTHON_EXECUTABLE )
-  get_filename_component(PYTHON_EXECUTABLE_NAME ${PYTHON_EXECUTABLE} NAME)
-  execute_process(
-    COMMAND ${PYTHON_EXECUTABLE} -c "import numpy; print(numpy.get_include())"
-    OUTPUT_VARIABLE _python_numpy_include OUTPUT_STRIP_TRAILING_WHITESPACE
-    RESULT_VARIABLE _python_failed0)
-  execute_process(
-    COMMAND ${PYTHON_EXECUTABLE} -c "from distutils.sysconfig import get_python_lib; from os.path import relpath; print(relpath(get_python_lib(1,prefix='${CMAKE_INSTALL_PREFIX}'),'${CMAKE_INSTALL_PREFIX}'))"
-    OUTPUT_VARIABLE TOPP_PYTHON_INSTALL_DIR OUTPUT_STRIP_TRAILING_WHITESPACE
-    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
-    RESULT_VARIABLE _python_failed2)
-
-  if( ${_python_failed0} EQUAL 0 AND ${_python_failed2} EQUAL 0 )
-    if( NOT IS_DIRECTORY "${_python_numpy_include}" )
-      set(PYTHON_EXECUTABLE)
-    else()
-      set(PYTHON_INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS} ${_python_numpy_include})
-    endif()
-
-    # get the major.minor python version
-    execute_process(
-      COMMAND ${PYTHON_EXECUTABLE} -c "import sys; print('%d.%d'%sys.version_info[0:2])"
-      OUTPUT_VARIABLE _python_version OUTPUT_STRIP_TRAILING_WHITESPACE
-      RESULT_VARIABLE _python_failed)
-    if( ${_python_failed} EQUAL 0 )
-      string(REGEX REPLACE "[\r\n]" "" PYTHON_MAJORMINOR_VERSION "${_python_version}")
-    else()
-      message(STATUS "failed to get python version")
-    endif()
-  else()
-    message(STATUS "failed to get python site-package directories via get_python_lib")
-    set(PYTHON_EXECUTABLE)
-  endif()
-endif()
-
-#find_package(Boost ${OpenRAVE_Boost_VERSION} EXACT COMPONENTS iostreams python thread filesystem system thread date_time)# regex)
-# find_package(Boost COMPONENTS iostreams python-py${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR} thread filesystem system thread date_time)
-find_package(Boost COMPONENTS iostreams python thread filesystem system thread date_time)
-
-# if(Boost_PYTHON${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}_FOUND)
-# set(Boost_PYTHON_FOUND ${Boost_PYTHON-PY${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}_FOUND})
-# set(Boost_PYTHON_LIBRARY ${Boost_PYTHON${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}_LIBRARY})
-# set(Boost_PYTHON_LIBRARY boost_python${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR})
-set(Boost_PYTHON_LIBRARY boost_python)#${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR})
-set(Boost_PYTHON_FOUND 1)
+#
+# if( CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX )
+#   add_definitions("-fno-strict-aliasing -Wall")
+# endif( CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX )
+#
+# #configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in ${CMAKE_CURRENT_BINARY_DIR}/include/topp/config.h IMMEDIATE @ONLY)
+#
+# # find_package(OpenRAVE)
+# # if( OpenRAVE_FOUND )
+# #   set(EXTRA_COMPILE_FLAGS "${EXTRA_COMPILE_FLAGS} -DWITH_OPENRAVE")
 # # endif()
-# message("Boost_PYTHON_FOUND ${Boost_PYTHON_FOUND}")
-message("Boost_PYTHON_LIBRARY ${Boost_PYTHON_LIBRARY} vs ${TOPP_VERSION_MAJOR}")
-
-if( Boost_FOUND )
-  include_directories(${Boost_INCLUDE_DIRS})
-  set(TOPP_LINK_DIRS ${TOPP_LINK_DIRS} ${Boost_LIBRARY_DIRS})
-elseif(Boost_VERSION AND NOT "${Boost_VERSION}" STREQUAL "0")
-  include_directories(${Boost_INCLUDE_DIRS})
-  set(TOPP_LINK_DIRS ${TOPP_LINK_DIRS} ${Boost_LIBRARY_DIRS})
-  message(FATAL_ERROR "Could not find boost libraries!")
-endif()
-
-message(STATUS "found boost version: ${Boost_VERSION} at ${Boost_INCLUDE_DIRS}")
-if( NOT Boost_THREAD_LIBRARY OR NOT Boost_DATE_TIME_LIBRARY )
-  message(FATAL_ERROR "boost thread and date_time libraries are necessary")
-endif()
-
-set(TOPPPY_INSTALL_DIR "${TOPP_PYTHON_INSTALL_DIR}/TOPP" CACHE PATH "TOPP Python bindings installation directory")
-
-find_package(PkgConfig) # pkg_check_modules
-
-check_library_exists(lapack cgesdd_ "" LAPACK_FOUND)
-if( LAPACK_FOUND )
-  set(LAPACK_LIBRARIES lapack)
-else()
-  message(STATUS "lapack dev library not found")
-endif()
-
-add_subdirectory(src)
-
-# add make uninstall capability
-#configure_file("${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in" "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake" IMMEDIATE @ONLY)
-#add_custom_target(uninstall "${CMAKE_COMMAND}" -P "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake")
-
-#configure_file("${CMAKE_CURRENT_SOURCE_DIR}/topp-config.cmake.in" "${CMAKE_CURRENT_BINARY_DIR}/topp-config.cmake" IMMEDIATE @ONLY)
-#configure_file("${CMAKE_CURRENT_SOURCE_DIR}/topp-config-version.cmake.in" "${CMAKE_CURRENT_BINARY_DIR}/topp-config-version.cmake" IMMEDIATE @ONLY)
-
-#install(FILES "${CMAKE_CURRENT_BINARY_DIR}/topp-config.cmake" "${CMAKE_CURRENT_BINARY_DIR}/topp-config-version.cmake" DESTINATION "lib${LIB_SUFFIX}/cmake/${TOPP_CMAKE_INSTALL_DIR}")
+#
+# include(FindPythonInterp)
+# ## check python
+# find_package(PythonLibs) # using PYTHON_INCLUDE_PATH instead of PYTHON_INCLUDE_DIRS?
+# if( NOT PYTHON_EXECUTABLE )
+#   # look specifically for 2.6
+#   find_program(PYTHON_EXECUTABLE NAMES python2.6 python PATHS [HKEY_LOCAL_MACHINE\\SOFTWARE\\Python\\PythonCore\\2.6\\InstallPath])
+# endif()
+#
+# # back compat?
+# if( NOT PYTHON_INCLUDE_DIRS )
+#   set(PYTHON_INCLUDE_DIRS ${PYTHON_INCLUDE_PATH})
+# endif()
+#
+# if( PYTHON_EXECUTABLE )
+#   get_filename_component(PYTHON_EXECUTABLE_NAME ${PYTHON_EXECUTABLE} NAME)
+#   execute_process(
+#     COMMAND ${PYTHON_EXECUTABLE} -c "import numpy; print(numpy.get_include())"
+#     OUTPUT_VARIABLE _python_numpy_include OUTPUT_STRIP_TRAILING_WHITESPACE
+#     RESULT_VARIABLE _python_failed0)
+#   execute_process(
+#     COMMAND ${PYTHON_EXECUTABLE} -c "from distutils.sysconfig import get_python_lib; from os.path import relpath; print(relpath(get_python_lib(1,prefix='${CMAKE_INSTALL_PREFIX}'),'${CMAKE_INSTALL_PREFIX}'))"
+#     OUTPUT_VARIABLE TOPP_PYTHON_INSTALL_DIR OUTPUT_STRIP_TRAILING_WHITESPACE
+#     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+#     RESULT_VARIABLE _python_failed2)
+#
+#   if( ${_python_failed0} EQUAL 0 AND ${_python_failed2} EQUAL 0 )
+#     if( NOT IS_DIRECTORY "${_python_numpy_include}" )
+#       set(PYTHON_EXECUTABLE)
+#     else()
+#       set(PYTHON_INCLUDE_DIRS ${PYTHON_INCLUDE_DIRS} ${_python_numpy_include})
+#     endif()
+#
+#     # get the major.minor python version
+#     execute_process(
+#       COMMAND ${PYTHON_EXECUTABLE} -c "import sys; print('%d.%d'%sys.version_info[0:2])"
+#       OUTPUT_VARIABLE _python_version OUTPUT_STRIP_TRAILING_WHITESPACE
+#       RESULT_VARIABLE _python_failed)
+#     if( ${_python_failed} EQUAL 0 )
+#       string(REGEX REPLACE "[\r\n]" "" PYTHON_MAJORMINOR_VERSION "${_python_version}")
+#     else()
+#       message(STATUS "failed to get python version")
+#     endif()
+#   else()
+#     message(STATUS "failed to get python site-package directories via get_python_lib")
+#     set(PYTHON_EXECUTABLE)
+#   endif()
+# endif()
+#
+# #find_package(Boost ${OpenRAVE_Boost_VERSION} EXACT COMPONENTS iostreams python thread filesystem system thread date_time)# regex)
+# # find_package(Boost COMPONENTS iostreams python-py${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR} thread filesystem system thread date_time)
+# find_package(Boost COMPONENTS iostreams python thread filesystem system thread date_time)
+#
+# # if(Boost_PYTHON${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}_FOUND)
+# # set(Boost_PYTHON_FOUND ${Boost_PYTHON-PY${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}_FOUND})
+# # set(Boost_PYTHON_LIBRARY ${Boost_PYTHON${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}_LIBRARY})
+# # set(Boost_PYTHON_LIBRARY boost_python${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR})
+# set(Boost_PYTHON_LIBRARY boost_python)#${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR})
+# set(Boost_PYTHON_FOUND 1)
+# # # endif()
+# # message("Boost_PYTHON_FOUND ${Boost_PYTHON_FOUND}")
+# message("Boost_PYTHON_LIBRARY ${Boost_PYTHON_LIBRARY} vs ${TOPP_VERSION_MAJOR}")
+#
+# if( Boost_FOUND )
+#   include_directories(${Boost_INCLUDE_DIRS})
+#   set(TOPP_LINK_DIRS ${TOPP_LINK_DIRS} ${Boost_LIBRARY_DIRS})
+# elseif(Boost_VERSION AND NOT "${Boost_VERSION}" STREQUAL "0")
+#   include_directories(${Boost_INCLUDE_DIRS})
+#   set(TOPP_LINK_DIRS ${TOPP_LINK_DIRS} ${Boost_LIBRARY_DIRS})
+#   message(FATAL_ERROR "Could not find boost libraries!")
+# endif()
+#
+# message(STATUS "found boost version: ${Boost_VERSION} at ${Boost_INCLUDE_DIRS}")
+# if( NOT Boost_THREAD_LIBRARY OR NOT Boost_DATE_TIME_LIBRARY )
+#   message(FATAL_ERROR "boost thread and date_time libraries are necessary")
+# endif()
+#
+# set(TOPPPY_INSTALL_DIR "${TOPP_PYTHON_INSTALL_DIR}/TOPP" CACHE PATH "TOPP Python bindings installation directory")
+#
+# find_package(PkgConfig) # pkg_check_modules
+#
+# check_library_exists(lapack cgesdd_ "" LAPACK_FOUND)
+# if( LAPACK_FOUND )
+#   set(LAPACK_LIBRARIES lapack)
+# else()
+#   message(STATUS "lapack dev library not found")
+# endif()
+#
+# add_subdirectory(src)
+#
+# # add make uninstall capability
+# #configure_file("${CMAKE_CURRENT_SOURCE_DIR}/cmake_uninstall.cmake.in" "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake" IMMEDIATE @ONLY)
+# #add_custom_target(uninstall "${CMAKE_COMMAND}" -P "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake")
+#
+# #configure_file("${CMAKE_CURRENT_SOURCE_DIR}/topp-config.cmake.in" "${CMAKE_CURRENT_BINARY_DIR}/topp-config.cmake" IMMEDIATE @ONLY)
+# #configure_file("${CMAKE_CURRENT_SOURCE_DIR}/topp-config-version.cmake.in" "${CMAKE_CURRENT_BINARY_DIR}/topp-config-version.cmake" IMMEDIATE @ONLY)
+#
+# #install(FILES "${CMAKE_CURRENT_BINARY_DIR}/topp-config.cmake" "${CMAKE_CURRENT_BINARY_DIR}/topp-config-version.cmake" DESTINATION "lib${LIB_SUFFIX}/cmake/${TOPP_CMAKE_INSTALL_DIR}")
