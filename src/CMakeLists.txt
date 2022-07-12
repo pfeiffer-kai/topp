@@ -12,10 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# copy the python files
-message("hallo")
-asdkjhblkj
-
 # include python bindings sample
 if( Boost_PYTHON_FOUND AND Boost_THREAD_FOUND )
   if( PYTHONLIBS_FOUND OR PYTHON_LIBRARIES )
