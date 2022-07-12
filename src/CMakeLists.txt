@@ -14,6 +14,7 @@
 
 # copy the python files
 message("hallo")
+asdkjhblkj
 
 # include python bindings sample
 if( Boost_PYTHON_FOUND AND Boost_THREAD_FOUND )
