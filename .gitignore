@@ -1,0 +1,7 @@
+*~
+*.pyc
+*.o
+.ropeproject
+.*.swp
+build/
+timeopt
