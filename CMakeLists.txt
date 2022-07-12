@@ -1,3 +1,4 @@
+message("hallo")
 # # -*- coding: utf-8 -*-
 # # Copyright (C) 2014 Rosen Diankov <rosen.diankov@gmail.com> & Cuong Pham
 # #
