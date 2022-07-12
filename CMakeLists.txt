@@ -152,6 +152,7 @@ find_package(Boost COMPONENTS iostreams python thread filesystem system thread d
 # if(Boost_PYTHON${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}_FOUND)
 # set(Boost_PYTHON_FOUND ${Boost_PYTHON-PY${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}_FOUND})
 # set(Boost_PYTHON_LIBRARY ${Boost_PYTHON${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR}_LIBRARY})
+# set(Boost_PYTHON_LIBRARY boost_python${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR})
 set(Boost_PYTHON_LIBRARY boost_python${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR})
 set(Boost_PYTHON_FOUND 1)
 # # endif()
@@ -183,7 +184,6 @@ else()
   message(STATUS "lapack dev library not found")
 endif()
 
-message("addsrc")
 add_subdirectory(src)
 
 # add make uninstall capability

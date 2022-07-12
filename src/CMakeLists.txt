@@ -13,15 +13,12 @@
 # limitations under the License.
 
 # copy the python files
+message("hallo")
 
 # include python bindings sample
-message("srccm ")
 if( Boost_PYTHON_FOUND AND Boost_THREAD_FOUND )
-  message("boostpythobfound")
   if( PYTHONLIBS_FOUND OR PYTHON_LIBRARIES )
-    message("pylibs")
     if( PYTHON_EXECUTABLE )
-      message("pyex")
       # get the site-packages directory
       execute_process(
         COMMAND ${PYTHON_EXECUTABLE} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(1))"
